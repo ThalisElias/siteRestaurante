@@ -121,11 +121,50 @@ function checkendereço(event) {
 addressInput.addEventListener("input", checkendereço);
 
 function finalizarCompra() {
+  const isOpen = checkRestauranteOpen();
+  if (!isOpen) {
+    alert("Restaurante Fechado!");
+    return;
+  }
   if (cart.length === 0) return;
   if (addressInput.value === "") {
     addressWarn.classList.remove("hidden");
     addressInput.classList.add("border-red-500");
     return;
   }
+
+  const cartItems = cart
+    .map((item) => {
+      return `
+      ${item.name}
+      Quantidade: ${item.quantity}
+      Preço: R$ ${item.price} 
+      <------------------->
+      `;
+    })
+    .join("");
+  const message = encodeURIComponent(cartItems);
+  const celular = "8196205368";
+  window.open(
+    `https://wa.me/${celular}?text=${message} Endereço:${addressInput.value}`,
+    "_blank"
+  );
 }
 checkoutBtn.addEventListener("click", finalizarCompra);
+
+function checkRestauranteOpen() {
+  const data = new Date();
+  const hora = data.getHours();
+  return hora >= 18 && hora < 22;
+}
+
+const spanHora = document.getElementById("date-span");
+const isOpen = checkRestauranteOpen();
+
+if (isOpen) {
+  spanHora.classList.remove("bg-red-500");
+  spanHora.classList.add("bg-green-600");
+} else {
+  spanHora.classList.add("bg-red-500");
+  spanHora.classList.remove("bg-green-600");
+}
