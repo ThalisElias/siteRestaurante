@@ -123,7 +123,18 @@ addressInput.addEventListener("input", checkendereço);
 function finalizarCompra() {
   const isOpen = checkRestauranteOpen();
   if (!isOpen) {
-    alert("Restaurante Fechado!");
+    Toastify({
+      text: "Ops, o restaurante está fechado.",
+      duration: 3000,
+      newWindow: true,
+      close: true,
+      gravity: "top", // `top` or `bottom`
+      position: "right", // `left`, `center` or `right`
+      stopOnFocus: true, // Prevents dismissing of toast on hover
+      style: {
+        background: "#ef4444",
+      },
+    }).showToast();
     return;
   }
   if (cart.length === 0) return;
@@ -146,9 +157,11 @@ function finalizarCompra() {
   const message = encodeURIComponent(cartItems);
   const celular = "8196205368";
   window.open(
-    `https://wa.me/${celular}?text=${message} Endereço:${addressInput.value}`,
+    `https://wa.me/${celular}?text=${message} Endereço:   ${addressInput.value}`,
     "_blank"
   );
+  cart = [];
+  updateCartModal();
 }
 checkoutBtn.addEventListener("click", finalizarCompra);
 
