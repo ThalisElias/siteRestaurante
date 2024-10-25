@@ -72,7 +72,7 @@ function updateCartModal() {
           <p>Qtd: ${item.quantity}</p>
           <p class="font-medium mt-2">R$ ${item.price.toFixed(2)}</p>
           </div>
-        <button>
+        <button class="remove-btn" data-name="${item.name}">
           Remover
         </button>
     </div>
@@ -85,4 +85,27 @@ function updateCartModal() {
     currency: "BRL",
   });
   cartCounter.innerHTML = cart.length;
+}
+function removeCart(event) {
+  if (event.target.classList.contains("remove-btn")) {
+    const name = event.target.getAttribute("data-name");
+    console.log(name);
+    removeItemCart(name);
+  }
+}
+
+cartItemnsContainer.addEventListener("click", removeCart);
+
+function removeItemCart(name) {
+  const index = cart.findIndex((item) => item.name === name);
+  if (index !== -1) {
+    const item = cart[index];
+    if (item.quantity > 1) {
+      item.quantity -= 1;
+      updateCartModal();
+      return;
+    }
+    cart.splice(index, 1);
+    updateCartModal();
+  }
 }
